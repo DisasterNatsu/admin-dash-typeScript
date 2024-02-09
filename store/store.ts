@@ -1,17 +1,14 @@
 // store.ts
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "@/slices/authSlice";
-import { setUser } from "@/slices/authSlice";
 import navReducer from "@/slices/navSlice";
-
-const combinedReducers = combineReducers({
-  setUser,
-});
+import chapterModalReducer from "@/slices/chapterSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     nav: navReducer,
+    chapter: chapterModalReducer,
 
     // Add other reducers as needed
   },

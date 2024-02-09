@@ -5,29 +5,19 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { FaRegEdit } from "react-icons/fa";
 import { Axios } from "@/utils/AxiosConfig";
-import NewComicButton from "@/components/shared/NewComicButton";
-
-const comics = [
-  {
-    title: "Comic 1",
-    genre: "Action",
-    status: "Active",
-  },
-  // Add other comics as needed
-];
+import Link from "next/link";
 
 async function getData() {
   try {
-    const res = await Axios.get("/comics/all");
+    const res = await Axios.get("/get-comics/all");
 
-    if (!res.data.ok) {
+    if (!res.data) {
       // Handle error, for example, log and return a default response
       console.log("Failed to fetch data:", res.status, res.statusText);
       return { message: "No chapters found" };
@@ -54,13 +44,13 @@ async function getData() {
 }
 
 const Comics = async () => {
-  const data = await getData();
+  const data: GetComicsType[] = await getData();
 
   return (
     <main>
       <Header title="Comics" />
       <div>
-        {data ? (
+        {data && (
           <Table>
             <TableCaption>A list of all comics</TableCaption>
             <TableHeader>
@@ -72,26 +62,33 @@ const Comics = async () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {comics.map((comic) => (
-                <TableRow key={comic.title} className="cursor-pointer">
-                  <TableCell className="font-medium w-[200px] line-clamp-1">
-                    {comic.title}
-                  </TableCell>
-                  <TableCell>{comic.genre}</TableCell>
-                  <TableCell>{comic.status}</TableCell>
-                  <TableCell className="flex justify-end">
-                    {/* Replace Link with an interactive element like a button */}
-                    <FaRegEdit />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {data.reverse().map((comic: GetComicsType) => {
+                const showGenre = JSON.parse(comic.Genres).join(" ");
+
+                const link = `/comics/${
+                  comic.id
+                }-${comic.ComicTitle.toLowerCase().split(" ").join("-")}`;
+
+                console.log(link);
+
+                return (
+                  <TableRow key={comic.id} className="cursor-pointer">
+                    <TableCell className="font-medium w-[200px] line-clamp-1">
+                      {comic.ComicTitle}
+                    </TableCell>
+                    <TableCell>{showGenre}</TableCell>
+                    <TableCell>{comic.Status}</TableCell>
+                    <TableCell className="flex justify-end">
+                      {/* Replace Link with an interactive element like a button */}
+                      <Link href={link}>
+                        <FaRegEdit />
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
-        ) : (
-          <div className="w-full flex p-5 mt-5 items-center justify-center flex-col gap-y-5">
-            <h1>No Comics Found</h1>
-            <NewComicButton title="Add New" />
-          </div>
         )}
       </div>
     </main>

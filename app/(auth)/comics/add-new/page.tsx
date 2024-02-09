@@ -3,6 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useState } from "react";
+import Cookies from "js-cookie";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -35,12 +38,9 @@ import Header from "@/components/shared/Header";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import Cookies from "js-cookie";
 import { Axios } from "@/utils/AxiosConfig";
-import { useEffect, useState } from "react";
 import { GenreData } from "@/static/genre";
 import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
 import { ToastAction } from "@/components/ui/toast";
 
 // Zod schema for form validation
@@ -66,6 +66,12 @@ const AddNewComic = () => {
   const [resMessage, setResMessage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+
+  // handle toggle
+
+  const handleToggle = () => {
+    setDialogOpen(!dialogOpen);
+  };
 
   // initialize form with default values (default value is necessary for genres)
 
@@ -365,7 +371,7 @@ const AddNewComic = () => {
                                 <FormControl>
                                   <Checkbox
                                     checked={field.value?.includes(genre.id)}
-                                    onCheckedChange={(checked) => {
+                                    onCheckedChange={(checked: any) => {
                                       return checked
                                         ? field.onChange([
                                             ...field.value,
@@ -459,7 +465,7 @@ const AddNewComic = () => {
 
         {/* The popup file */}
 
-        <Dialog open={dialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={handleToggle}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{resMessage}</DialogTitle>
@@ -493,7 +499,7 @@ const AddNewComic = () => {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => setDialogOpen(!dialogOpen)}
+                  onClick={handleToggle}
                 >
                   Close
                 </Button>

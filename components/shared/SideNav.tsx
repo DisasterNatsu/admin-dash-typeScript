@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import Link from "next/link";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import Cookies from "js-cookie";

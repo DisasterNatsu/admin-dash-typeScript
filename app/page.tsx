@@ -84,7 +84,7 @@ const LongInPage = () => {
 
         // Dispatch the setAuthToken action to update the Redux store
 
-        Cookies.set("ds-admin-auth", response.authToken);
+        Cookies.set("ds-admin-auth", response.authToken, { expires: 7 });
 
         Router.replace("/dashboard");
       }

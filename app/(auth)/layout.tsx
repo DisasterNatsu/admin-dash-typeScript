@@ -3,18 +3,23 @@
 import { ModeToggle } from "@/components/theme/themeToggle.";
 import SideNav from "@/components/shared/SideNav";
 import { useAuth } from "@/components/shared/hooks/useAuth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/slices/authSlice";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { RootState } from "@/store/store";
+import Loading from "@/components/shared/Loading";
 
 const AuithLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  // loading state
+
+  const [loading, setLoading] = useState(true);
+
   // router
 
   const Router = useRouter();
@@ -37,6 +42,7 @@ const AuithLayout = ({
     const vaild: User = await useAuth();
 
     if (vaild.verified) {
+      setLoading(false);
       return dispatch(
         setUser({ email: vaild.email, userName: vaild.userName })
       );
@@ -48,6 +54,10 @@ const AuithLayout = ({
   useEffect(() => {
     checkIfLoggedIn();
   }, [pathname]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
